@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Gestion Banque</title>
+<link rel="stylesheet" href="css/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/myStyle.css"/>
+</head>
+<body ng-app="myBanqueApp" ng-controller="myBanqueController">
+
+<div class="container">
+<div class="col-sm-6 col-md-6 col-xs-12">
+	<div class="panel panel-info spacer">
+	<div class="panel-heading"> Taper le Numero de Votre Compte</div>
+	<div class="panel-body">
+		<form>
+			<div class="form-group">
+				<label>Code Compte : </label>
+				<input type="text" class="form-control" ng-model="codeCompte"/>
+				<input type="submit" class="btn btn-primary" ng-click="searchCompte()" value="Chercher"/>
+			</div>	
+		</form>
+	</div>
+	</div>
+</div>
+<div class="col-sm-6 col-md-6 col-xs-12" ng-if="compte!=null">
+	<div class="panel panel-info spacer">
+	<div class="panel-heading">Informations Sur le compte</div>
+	<div class="panel-body">
+			<div class="form-group">
+				<p>Type Compte : <strong>{{compte.type_cpt}}</strong></p>
+				<p>Code Compte : <strong>{{compte.codeCompte|uppercase}}</strong></p>
+				<p>Solde : <strong>{{compte.solde}} Dh</strong></p>
+				<p>Date Creation : <strong>{{compte.dateCreation | date:"dd / MM / yyyy > HH:m"}}</strong></p>
+			</div>
+	</div>
+	</div>
+</div>
+
+<div class="col-sm-6 col-md-6 col-xs-12" ng-if="compte!=null">
+	<div class="panel panel-info spacer">
+	<div class="panel-heading">Effectuer des Operations</div>
+	<div class="panel-body">
+			<div class="form-group">
+				<label>Versement : </label>
+				<input type="radio" ng-model="operation.type" value="versement"/>
+				<label>Retrait : </label>
+				<input type="radio" ng-model="operation.type" value="retrait"/><br>				
+				<label>Montant de {{operation.type}} : </label><br>
+				<input type="text" ng-model="operation.montant"/><br>
+				<input type="submit" class="btn btn-primary" ng-click="operationValider()"/><br>
+				<span ng-if="errors!=null" class="alert alert-danger">{{errors.message}}</span>
+			</div>
+	</div>
+	</div>
+</div>
+
+<div class="col-sm-6 col-md-6 col-xs-12" ng-if="compte!=null">
+	<div class="panel panel-info spacer">
+	<div class="panel-heading">Listes des Operations</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>#</td>
+					<td>Type d'Opération</td>
+					<td>Montant</td>
+					<td>Date Opération</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="list in pageOperations.operation">
+					<td>{{list.numOperation}}</td>
+					<td ng-if="list.type_op=='VE'">Versement</td>
+					<td ng-if="list.type_op=='RE'">Retrait</td>
+					<td>{{list.montant}}</td>
+					<td>{{list.dateOperation|date:'dd-MM-yyyy hh:mm'}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ul  class="pagination" ng-repeat="page in pageTotal track by $index">
+    		<li style="cursor: pointer;" ng-class="{active:$index==pageCurrent}" ><a ng-click="goTo($index)">{{$index}}</a></li>
+  		</ul>
+	</div>
+	</div>
+</div>
+</div>
+
+<script src="js/angular.min.js"></script>
+<script src="js/myApp.js"></script>
+</body>
+</html>
